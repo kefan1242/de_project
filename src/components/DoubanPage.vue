@@ -1,13 +1,13 @@
 <template>
   <div class="page">
     <div class="image-gallery">
-      <img :src="d1" alt="图片1" />
-      <img :src="d2" alt="图片2" />
-      <img :src="d3" alt="图片3" />
-      <img :src="d4" alt="图片4" />
+      <img :src="d1" alt="Image 1" />
+      <img :src="d2" alt="Image 2" />
+      <img :src="d3" alt="Image 3" />
+      <img :src="d4" alt="Image 4" />
     </div>
     <div class="chat-container">
-      <h2>聊天框</h2>
+      <h2>Chat Box</h2>
       <div class="messages">
         <div
           v-for="(message, index) in messages"
@@ -21,12 +21,14 @@
         <input
           type="text"
           v-model="userInput"
-          placeholder="请输入消息..."
+          placeholder="Enter your message..."
           @keyup.enter="sendMessage"
         />
-        <button @click="sendMessage">发送</button>
+        <button @click="sendMessage">Send</button>
       </div>
     </div>
+    <!-- 固定在左下角的返回按钮 -->
+    <button class="back-button" @click="goBack">返回主界面</button>
   </div>
 </template>
 
@@ -41,21 +43,57 @@ export default {
       d4: require("@/assets/d4.png"),
       userInput: "",
       messages: [
-        { text: "你好！我是聊天机器人，有什么可以帮你的吗？", sender: "bot" },
+        { text: "hello", sender: "bot" },
       ],
     };
   },
   methods: {
-    sendMessage() {
+    goBack() {
+      // 路由跳转到主界面
+      this.$router.push("/");
+    },
+    async sendMessage() {
       if (this.userInput.trim() !== "") {
         this.messages.push({ text: this.userInput, sender: "user" });
-        const userMessage = this.userInput;
+        const question = this.userInput;
         this.userInput = "";
 
         setTimeout(() => {
-          const botReply = `你说的是：“${userMessage}”，谢谢你的反馈！`;
+          const botReply = `你说的是：“${question}”，谢谢你的反馈！`;
           this.messages.push({ text: botReply, sender: "bot" });
         }, 1000);
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/gpt/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ question }),
+          });
+
+          if (!response.ok) {
+            throw new Error("网络响应错误");
+          }
+
+          const data = await response.json();
+          if (data.success) {
+            this.messages.push({
+              text: data.data,
+              sender: "bot",
+            });
+          } else {
+            this.messages.push({
+              text: "后端返回错误，请稍后再试。",
+              sender: "bot",
+            });
+          }
+        } catch (error) {
+          this.messages.push({
+            text: "无法连接到后端服务，请检查网络或后端状态。",
+            sender: "bot",
+          });
+        }
       }
     },
   },
@@ -67,16 +105,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  height: 100vh; /* 全屏高度 */
+  height: 100vh;
   padding: 20px;
-  background: linear-gradient(to right, #f9f9f9, #e3f2fd); /* 增加背景渐变 */
+  background: linear-gradient(to right, #f9f9f9, #e3f2fd);
+  position: relative; /* 需要相对定位以放置固定的按钮 */
 }
 
 .image-gallery {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 两列布局 */
-  gap: 20px; /* 图片间距 */
-  width: 50%; /* 左侧图片容器宽度调整 */
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 50%;
 }
 
 .image-gallery img {
@@ -84,21 +123,21 @@ export default {
   height: auto;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease; /* 增加悬停效果 */
+  transition: transform 0.3s ease;
 }
 
 .image-gallery img:hover {
-  transform: scale(1.05); /* 鼠标悬停放大 */
+  transform: scale(1.05);
 }
 
 .chat-container {
-  width: 45%; /* 聊天框宽度 */
+  width: 45%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
   border-radius: 12px;
-  background: linear-gradient(to bottom, #ffffff, #e0f7fa); /* 渐变背景 */
+  background: linear-gradient(to bottom, #ffffff, #e0f7fa);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -170,6 +209,27 @@ button {
 
 button:hover {
   background-color: #2e8c72;
+  transform: translateY(-2px);
+}
+
+/* 固定左下角的返回按钮样式 */
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #d84315;
   transform: translateY(-2px);
 }
 </style>

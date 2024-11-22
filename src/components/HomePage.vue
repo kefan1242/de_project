@@ -7,7 +7,7 @@
     <div class="card-container">
       <div class="card" @click="navigateTo('/douban')">
         <div class="image-wrapper">
-          <img src="/images/douban.jpg" alt="豆瓣影评" />
+          <img :src="require('@/assets/d1.png')" alt="豆瓣影评" />
         </div>
         <div class="content">
           <h2>豆瓣影评</h2>
@@ -16,7 +16,7 @@
       </div>
       <div class="card" @click="navigateTo('/rottenTomatoes')">
         <div class="image-wrapper">
-          <img src="/images/rottenTomatoes.jpg" alt="烂番茄影评" />
+          <img :src="require('@/assets/lanfanqie.png')" alt="烂番茄影评" />
         </div>
         <div class="content">
           <h2>烂番茄影评</h2>
@@ -25,7 +25,7 @@
       </div>
       <div class="card" @click="navigateTo('/amazonBooks')">
         <div class="image-wrapper">
-          <img src="/images/amazonBooks.jpg" alt="Amazon书评" />
+          <img :src="require('@/assets/book.png')" alt="Amazon书评" />
         </div>
         <div class="content">
           <h2>Amazon书评</h2>
@@ -34,7 +34,7 @@
       </div>
       <div class="card" @click="navigateTo('/wine')">
         <div class="image-wrapper">
-          <img src="/images/wine.jpg" alt="Wine Enthusiast酒评" />
+          <img :src="require('@/assets/wine.png')" alt="Wine Enthusiast酒评" />
         </div>
         <div class="content">
           <h2>酒评数据</h2>
