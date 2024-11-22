@@ -1,10 +1,10 @@
 <template>
   <div class="page">
     <div class="image-gallery">
-      <img src="rotten1.jpg" alt="Rotten Tomatoes Image 1" />
-      <img src="rotten2.jpg" alt="Rotten Tomatoes Image 2" />
-      <img src="rotten3.jpg" alt="Rotten Tomatoes Image 3" />
-      <img src="rotten4.jpg" alt="Rotten Tomatoes Image 4" />
+      <img src="rotten1.png" alt="Rotten Tomatoes Image 1" />
+      <img src="rotten2.png" alt="Rotten Tomatoes Image 2" />
+      <img src="rotten3.png" alt="Rotten Tomatoes Image 3" />
+      <img src="rotten4.png" alt="Rotten Tomatoes Image 4" />
     </div>
     <div class="chat-container">
       <h2>Rotten Tomatoes Chat Box</h2>
@@ -27,8 +27,10 @@
         <button @click="sendMessage">Send</button>
       </div>
     </div>
-    <!-- 固定左下角的返回按钮 -->
-    <button class="back-button" @click="goBack">返回主界面</button>
+    <!-- Link above the return button -->
+    <a href="https://example.com" target="_blank" class="link">View More Information</a>
+    <!-- Fixed bottom left return button -->
+    <button class="back-button" @click="goBack">Return to Main Page</button>
   </div>
 </template>
 
@@ -39,7 +41,7 @@ export default {
     return {
       userInput: "",
       messages: [
-        { text: "欢迎来到 Rotten Tomatoes 页面，请问有什么可以帮助您？", sender: "bot" },
+        { text: "Welcome to the Rotten Tomatoes page, how can I assist you?", sender: "bot" },
       ],
     };
   },
@@ -63,7 +65,7 @@ export default {
           });
 
           if (!response.ok) {
-            throw new Error("网络响应错误");
+            throw new Error("Network response error");
           }
 
           const data = await response.json();
@@ -74,13 +76,13 @@ export default {
             });
           } else {
             this.messages.push({
-              text: "后端返回错误，请稍后再试。",
+              text: "Backend returned an error, please try again later.",
               sender: "bot",
             });
           }
         } catch (error) {
           this.messages.push({
-            text: "无法连接到后端服务，请检查网络或后端状态。",
+            text: "Unable to connect to backend service, please check your network or backend status.",
             sender: "bot",
           });
         }
@@ -91,7 +93,7 @@ export default {
 </script>
 
 <style>
-/* 页面布局样式 */
+/* Page layout styles */
 .page {
   display: flex;
   justify-content: space-between;
@@ -203,7 +205,7 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* 固定左下角的返回按钮 */
+/* Fixed bottom left return button */
 .back-button {
   position: fixed;
   bottom: 20px;
@@ -222,5 +224,21 @@ button:hover {
 .back-button:hover {
   background-color: #ef6c00;
   transform: translateY(-2px);
+}
+
+/* New link style */
+.link {
+  position: fixed;
+  bottom: 60px;
+  left: 20px;
+  font-size: 14px;
+  color: #e65100;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #ef6c00;
 }
 </style>

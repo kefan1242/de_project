@@ -7,7 +7,7 @@
       <img :src="d4" alt="Image 4" />
     </div>
     <div class="chat-container">
-      <h2>Chat Box</h2>
+      <h2>Douban Chat Box</h2>
       <div class="messages">
         <div
           v-for="(message, index) in messages"
@@ -27,8 +27,10 @@
         <button @click="sendMessage">Send</button>
       </div>
     </div>
-    <!-- 固定在左下角的返回按钮 -->
-    <button class="back-button" @click="goBack">返回主界面</button>
+    <!-- Link above the return button -->
+    <a href="https://github.com/kefan1242/de_project/tree/main/DouBanShortComment" target="_blank" class="link">View More Information</a>
+    <!-- Fixed bottom left return button -->
+    <button class="back-button" @click="goBack">Return to Main Page</button>
   </div>
 </template>
 
@@ -43,13 +45,12 @@ export default {
       d4: require("@/assets/d4.png"),
       userInput: "",
       messages: [
-        { text: "hello", sender: "bot" },
+        { text: "Welcome to the Douban page, how can I assist you?", sender: "bot" },
       ],
     };
   },
   methods: {
     goBack() {
-      // 路由跳转到主界面
       this.$router.push("/");
     },
     async sendMessage() {
@@ -57,11 +58,6 @@ export default {
         this.messages.push({ text: this.userInput, sender: "user" });
         const question = this.userInput;
         this.userInput = "";
-
-        setTimeout(() => {
-          const botReply = `你说的是：“${question}”，谢谢你的反馈！`;
-          this.messages.push({ text: botReply, sender: "bot" });
-        }, 1000);
 
         try {
           const response = await fetch("http://127.0.0.1:8000/gpt/", {
@@ -73,7 +69,7 @@ export default {
           });
 
           if (!response.ok) {
-            throw new Error("网络响应错误");
+            throw new Error("Network response error");
           }
 
           const data = await response.json();
@@ -84,13 +80,13 @@ export default {
             });
           } else {
             this.messages.push({
-              text: "后端返回错误，请稍后再试。",
+              text: "Backend returned an error, please try again later.",
               sender: "bot",
             });
           }
         } catch (error) {
           this.messages.push({
-            text: "无法连接到后端服务，请检查网络或后端状态。",
+            text: "Unable to connect to the backend service, please check your network or backend status.",
             sender: "bot",
           });
         }
@@ -108,7 +104,7 @@ export default {
   height: 100vh;
   padding: 20px;
   background: linear-gradient(to right, #f9f9f9, #e3f2fd);
-  position: relative; /* 需要相对定位以放置固定的按钮 */
+  position: relative;
 }
 
 .image-gallery {
@@ -168,15 +164,15 @@ export default {
 }
 
 .message.user {
-  background-color: #bbdefb;
+  background-color: #ce93d8;
   text-align: right;
-  color: #0d47a1;
+  color: #6a1b9a;
 }
 
 .message.bot {
-  background-color: #c8e6c9;
+  background-color: #e1bee7;
   text-align: left;
-  color: #1b5e20;
+  color: #8e24aa;
 }
 
 .input-box {
@@ -198,7 +194,7 @@ button {
   padding: 12px 20px;
   font-size: 14px;
   font-weight: bold;
-  background-color: #42b983;
+  background-color: #6a1b9a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -208,18 +204,17 @@ button {
 }
 
 button:hover {
-  background-color: #2e8c72;
+  background-color: #8e24aa;
   transform: translateY(-2px);
 }
 
-/* 固定左下角的返回按钮样式 */
 .back-button {
   position: fixed;
   bottom: 20px;
   left: 20px;
   padding: 10px 20px;
   font-size: 14px;
-  background-color: #ff7043;
+  background-color: #6a1b9a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -229,7 +224,22 @@ button:hover {
 }
 
 .back-button:hover {
-  background-color: #d84315;
+  background-color: #8e24aa;
   transform: translateY(-2px);
+}
+
+.link {
+  position: fixed;
+  bottom: 60px;
+  left: 20px;
+  font-size: 14px;
+  color: #6a1b9a;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #8e24aa;
 }
 </style>
